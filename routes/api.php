@@ -87,5 +87,3 @@
             return response()->json(['message' => 'User deleted successfully']);
         });
         Route::get('/users/search', [TaskController::class, 'getUsers']);
-        
-
