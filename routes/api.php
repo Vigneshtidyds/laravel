@@ -8,17 +8,6 @@
     use App\Models\User;
     use Illuminate\Support\Facades\Hash;
 
-    /*
-    |--------------------------------------------------------------------------
-    | API Routes
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can register API routes for your application. These
-    | routes are loaded by the RouteServiceProvider within a group which
-    | is assigned the "api" middleware group. Enjoy building your API!
-    |
-    */
-
     Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         return $request->user();
     });
@@ -41,7 +30,7 @@
     }); 
     Route::post('/users', function (Request $request) {
         $user = User::create([
-            'name' => $request->name,
+            'name' => $request->name,   
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
@@ -53,20 +42,17 @@
         Route::get('/profile', [UserController::class, 'getProfile']);
     });
     Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('/add-user', [UserController::class, 'addUser']); // ✅ Now it's /api/add-user
+        Route::post('/add-user', [UserController::class, 'addUser']);
     });
-    // ✅ Disable User
         Route::put('/users/{id}/disable', function ($id) {
             $user = User::find($id);
             if (!$user) {
                 return response()->json(['message' => 'User not found'], 404);
             }
-            $user->status = 'disabled';
+            $user->status = 'disabled';     
             $user->save();
             return response()->json(['message' => 'User disabled successfully']);
         });
-
-        // ✅ Enable User
         Route::put('/users/{id}/enable', function ($id) {
             $user = User::find($id);
             if (!$user) {
@@ -76,8 +62,6 @@
             $user->save();
             return response()->json(['message' => 'User enabled successfully']);
         });
-
-        // ✅ Delete User
         Route::delete('/users/{id}', function ($id) {
             $user = User::find($id);
             if (!$user) {
