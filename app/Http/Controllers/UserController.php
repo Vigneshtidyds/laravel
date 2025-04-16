@@ -19,18 +19,29 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'role' => 'required|in:user,admin'
+            'role' => 'required|in:user,admin',
+            'profile_pic' => 'nullable|file|mimes:jpeg,png,jpg|max:2048' // Ensure it's an actual file
         ]);
         
+        $profilePicPath = null;
+
+        // Handle profile picture upload
+        if ($request->hasFile('profile_pic')) {
+            $profilePicPath = $request->file('profile_pic')->store('profile_pics', 'public');
+        }
+
+        // Create user with profile_pic field if provided
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role
+            'role' => $request->role,
+            'profile_pic' => $profilePicPath ? "/storage/{$profilePicPath}" : null, // Store path if file uploaded
         ]);
 
         return response()->json(['message' => 'User added successfully', 'user' => $user]);
     }
+
     public function getProfile(Request $request)
     {
         return response()->json(auth()->user());

@@ -87,11 +87,11 @@ class TaskController extends Controller
     // Get users for auto-suggestions
     public function getUsers(Request $request)
     {
-        $query = $request->query('q'); // Get the search query
+        $query = $request->query('q');
         $users = User::where('email', 'like', "%$query%")
-                    ->select('id', 'email')
+                    ->orWhere('name', 'like', "%$query%")
+                    ->select('id', 'email', 'name', 'profile_pic')
                     ->get();
-
         return response()->json($users);
     }
 }
