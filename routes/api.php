@@ -24,6 +24,7 @@
     Route::post('/login', [AuthController::class, 'login']);
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/users', [UserController::class, 'addUser']);
+
     });
     Route::get('/users', function () {
         return response()->json(User::all());
