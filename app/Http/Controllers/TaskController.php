@@ -47,19 +47,19 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
 
         $request->validate([
-            'name'           => 'required|string|max:255',
+            'name'           => 'sometimes|string|max:255',
             'due_date'       => 'nullable|date',
-            'bucket_id'      => 'required|exists:buckets,id',
+            'bucket_id'      => 'sometimes|exists:buckets,id',
             'description'    => 'nullable|string',
             'start_date'     => 'nullable|date',
             'priority'       => 'nullable|in:Low,Medium,High',
-            'status'         => 'nullable|in:Not Started,In Progress,Completed',
+            'status'         => ['nullable',Rule::in(['Not Started', 'not_started', 'In Progress', 'in_progress', 'Completed', 'completed'])],
             'assigned_users' => 'nullable|array',
             'assigned_users.*' => 'exists:users,id',
             'checklist'      => 'nullable|array',
             'attachments'    => 'nullable|array',
             'comments'       => 'nullable|array',
-        ]);
+        ]);        
 
         $task->update([
             'name'         => $request->name,
